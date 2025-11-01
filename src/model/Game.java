@@ -1,9 +1,11 @@
 package model;
 
+import java.util.List;
+
 public class Game {
     private Player server;
     private Player receiver;
-    private BallExchange ballExchange[];
+    private List<BallExchange> ballExchanges;
     private Player winner;
 
     // Getter
@@ -16,8 +18,8 @@ public class Game {
         return receiver;
     }
 
-    public BallExchange[] getBallExchange() {
-        return ballExchange;
+    public List<BallExchange> getBallExchanges() {
+        return ballExchanges;
     }
 
     public Player getWinner() {
@@ -34,8 +36,8 @@ public class Game {
         this.receiver = receiver;
     }
 
-    public void setBallExchange(BallExchange[] ballExchange) {
-        this.ballExchange = ballExchange;
+    public void setBallExchanges(List<BallExchange> ballExchanges) {
+        this.ballExchanges = ballExchanges;
     }
 
     public void setWinner(Player winner) {
@@ -44,10 +46,10 @@ public class Game {
 
     // Constructor
 
-    public Game(Player server, Player receiver, BallExchange[] ballExchange) {
+    public Game(Player server, Player receiver, List<BallExchange> ballExchanges) {
         this.server = server;
         this.receiver = receiver;
-        this.ballExchange = ballExchange;
+        this.ballExchanges = ballExchanges;
         this.winner = null;
     }
 

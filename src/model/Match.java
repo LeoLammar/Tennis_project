@@ -79,6 +79,5 @@ public class Match {
         this.winner = winner;
         this.statistics = statistics;
         this.manualMode = false;
-    }
-    
+    } 
 }

@@ -36,11 +36,15 @@ public class Referee extends Person{
     // Methode
 
     public void annouceScore(String score){
-        System.out.println("Score : " + score);
+        System.out.println("["+ getFirstName() +"]"+" Score : " + score);
     }
 
-    public void annoucefault(String type){
+    public void annouceFault(){
         System.out.println("Fault !");
+    }
+
+    public void annouceDoubleFault(){
+        System.out.println("Double fault !");
     }
 
     public void annouceWinner( Player winner){

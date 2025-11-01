@@ -100,30 +100,6 @@ public class Tournament {
         this.spectators = spectators;
     }
 
-    // Methode
-
-    public void autoGenerateTournament() {
-        // On part du principe qu'il y a 128 joueurs, donc 64 matchs au premier tour.
-        int numberOfMatches = players.length / 2;
-        this.matches = new Match[numberOfMatches];
-
-        // On s'assure qu'il y a au moins un arbitre disponible.
-        if (players == null || players.length == 0 || referees == null || referees.length == 0) {
-            System.out.println("Impossible de générer le tournoi: aucun arbitre ou joueur n'est disponible.");
-            return;
-        }
-
-        for (int i = 0; i < numberOfMatches; i++) {
-            Player player1 = this.players[i * 2];
-            Player player2 = this.players[i * 2 + 1];
-            Referee referee = this.referees[i % referees.length]; // On assigne les arbitres à tour de rôle
-
-            // On crée un nouveau match avec les joueurs et l'arbitre.
-            // Les autres attributs (sets, winner, statistics) sont laissés à null pour le moment.
-            this.matches[i] = new Match(player1, player2, referee, null, null, null);
-        }
-    }
-
     // Display  
 
     @Override
