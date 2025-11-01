@@ -80,8 +80,5 @@ public class Match {
         this.statistics = statistics;
         this.manualMode = false;
     }
-
-
-
     
 }

@@ -10,7 +10,7 @@ public class Player extends Person {
     private Coach coach;
     private String outfitColor;
     private boolean isFemale;
-    private int totalPoints;
+    private Score score;
 
     // Getter
 
@@ -38,8 +38,8 @@ public class Player extends Person {
         return isFemale;
     }
 
-    public int getTotalPoints(){
-        return totalPoints;
+    public Score getScore(){
+        return score;
     }
 
     // Setter
@@ -68,8 +68,8 @@ public class Player extends Person {
         this.isFemale = isFemale;
     }
     
-    public void setTotalPoints(int totalPoints){
-        this.totalPoints = totalPoints;
+    public void setScore(Score score){
+        this.score = score;
     }
 
     // Methode
@@ -100,16 +100,21 @@ public class Player extends Person {
 
     // Constructor
 
-    public Player(String birthLastName, String currentLastName, String firstName, String nickname, String nationality, int height, int weight, String playingHand){
+    public Player(String birthLastName, String currentLastName, String firstName, String nickname, String nationality, int height, int weight, String playingHand, String sponsor, int ranking, Coach coach, String outfitColor, boolean isFemale, Score score){
         super(birthLastName, currentLastName, firstName, nickname, nationality, height, weight);
         this.playingHand = playingHand;
-
+        this.sponsor = sponsor;
+        this.ranking = ranking;
+        this.coach = coach;
+        this.outfitColor = outfitColor;
+        this.isFemale = isFemale;
+        this.score = score;
     }
 
     // Display
 
     @Override
     public String toString() {
-        return super.toString().replaceFirst("]$", ", playingHand=" + playingHand + ", sponsor=" + sponsor + ", ranking=" + ranking + ", coach=" + coach + ", outfitColor=" + outfitColor + ", isFemale=" + isFemale + ", totalPoints=" + totalPoints + "]");
+        return super.toString().replaceFirst("]$", ", playingHand=" + playingHand + ", sponsor=" + sponsor + ", ranking=" + ranking + ", coach=" + coach + ", outfitColor=" + outfitColor + ", isFemale=" + isFemale + ", score=" + score + "]");
     }
 }

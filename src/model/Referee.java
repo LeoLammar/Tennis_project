@@ -43,8 +43,8 @@ public class Referee extends Person{
         System.out.println("Fault !");
     }
 
-    public void annouceWinner(/* Player player */){
-        System.out.println(" ... Win");
+    public void annouceWinner( Player winner){
+        System.out.println(winner.getFirstName() + "  Win");
     }
 
     public void resolveDispute(/*Player p1, Player p2 */){
