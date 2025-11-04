@@ -1,5 +1,59 @@
 package services;
 
+import model.Match;
+import model.Player;
+import model.Referee;
+import model.Statistics;
+import model.Tournament;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 public class TournamentService {
+
+    private final MatchService matchService = new MatchService();
+    private List<Player> players; // Liste des joueurs participants au tournoi
+
+    
+    public Tournament createTournament(String name, int year, List<Player> players, Referee[] referees) {
+        // Créer un tournoi avec les joueurs et arbitres spécifiés
+       Tournament tournament = new Tournament(name, "Ville", "Surface", "Catégorie", year, players.toArray(new Player[0]), referees, null);
+       this.players = players;
+       return tournament;
+    }
+
+    public Match generateMatch(Player player1, Player player2, Referee referee, Statistics matchStats, int setsToWin) {
+        // Générer un match entre deux joueurs
+        return new Match(player1, player2, referee, null, null, matchStats);
+    }
+
+    public Match playMatch(Match match, int setsToWin) {
+        // Simuler la lecture d'un match
+        Referee referee = match.getReferee();
+        Statistics matchStatistics = match.getStatistics();
+        Player player1 = match.getPlayer1();
+        Player player2 = match.getPlayer2();
+
+        return matchService.playMatch(player1, player2, referee, matchStatistics, setsToWin);
+    }
+
+    public List<Match> generateTournamentRound(List<Player> players, Referee[] referees) {
+        // Générer un tour de matches
+        List<Match> matches = new ArrayList<>();
+        Statistics matchStatistics = new Statistics();
+        Random random = new Random();
+
+        for (int i = 0; i < players.size(); i += 2) {
+            Player player1 = players.get(i);
+            Player player2 = players.get(i + 1);
+            Referee referee = referees[random.nextInt(referees.length)]; // Sélectionner un arbitre au hasard
+
+            Match match = generateMatch(player1, player2, referee, matchStatistics, 2); // Par exemple, des matchs en 3 sets gagnants
+            matches.add(match);
+        }
+
+        return matches;
+    }
 
 }

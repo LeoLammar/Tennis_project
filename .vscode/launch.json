@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "app.Main",
+            "projectName": "Tennis_project_f5e356d8",
+            "vmArgs": [
+                "--module-path",
+                "C:/Users/leola/Tennis_project/lib", // Assurez-vous que ce chemin pointe vers vos .jar JavaFX
+                "-Djava.library.path=C:/Users/leola/Tennis_project/lib", // Indique où trouver les DLLs
+                "--add-modules",
+                "javafx.controls,javafx.fxml,javafx.graphics"
+            ]
+        }
+        
+    ]
+}

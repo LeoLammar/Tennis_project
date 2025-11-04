@@ -37,7 +37,7 @@ public class GameService {
 
             // L'arbitre annonce le score après chaque point
             String scoreString = convertScoreToString(scoreServer, scoreReceiver, server, receiver);
-            referee.annouceScore(scoreString);
+            referee.announceScore(scoreString);
 
             // Vérifier si le jeu est terminé
             if (scoreServer >= 4 && scoreServer >= scoreReceiver + 2) {
@@ -56,10 +56,10 @@ public class GameService {
     private String convertScoreToString(int scoreP1, int scoreP2, Player p1, Player p2) {
         // On vérifie d'abord si le jeu est terminé
         if (scoreP1 >= 4 && scoreP1 >= scoreP2 + 2) {
-            return "Game, " + p1.getFirstName();
+            return "Jeux pour, " + p1.getFirstName();
         }
         if (scoreP2 >= 4 && scoreP2 >= scoreP1 + 2) {
-            return "Game, " + p2.getFirstName();
+            return "Jeux pour, " + p2.getFirstName();
         }
 
         if (scoreP1 >= 3 && scoreP2 >= 3) {
@@ -75,6 +75,41 @@ public class GameService {
             String[] points = {"0", "15", "30", "40"};
             return points[scoreP1] + " - " + points[scoreP2];
         }
+    }
+
+    public Player playTieBreak(Player player1, Player player2, Referee referee, Statistics matchStats) {
+        int scoreP1 = 0;
+        int scoreP2 = 0;
+        Player winner = null;
+
+        // Dans un tie-break, le service alterne différemment, mais pour simplifier,
+        // nous allons garder une simulation de point simple.
+        while (winner == null) {
+            // On simule un point sans se soucier du serveur pour cette version simplifiée
+            Player pointWinner = playRally(player1, player2);
+            if (pointWinner.equals(player1)) {
+                scoreP1++;
+            } else {
+                scoreP2++;
+            }
+
+            referee.announceScore(scoreP1 + " - " + scoreP2);
+
+            if (scoreP1 >= 7 && scoreP1 >= scoreP2 + 2) {
+                winner = player1;
+            } else if (scoreP2 >= 7 && scoreP2 >= scoreP1 + 2) {
+                winner = player2;
+            }
+        }
+        
+        // On met à jour les stats de jeu gagné pour le vainqueur du tie-break
+        if(winner.equals(player1)) {
+            matchStats.updateGamesWon();
+        } else {
+            matchStats.updateGamesWon();
+        }
+
+        return winner;
     }
 
     private Player simulatePoint(Player server, Player receiver, Statistics stats, Referee referee) {

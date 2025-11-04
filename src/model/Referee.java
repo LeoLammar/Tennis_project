@@ -35,8 +35,20 @@ public class Referee extends Person{
 
     // Methode
 
-    public void annouceScore(String score){
-        System.out.println("["+ getFirstName() +"]"+" Score : " + score);
+    public void announceScore(String score){
+        System.out.println("["+ getFirstName() +"] " + score);
+    }
+
+    public void announceNewGame(Player server, int gamesP1, int gamesP2) {
+        System.out.println("----------------------------------------------------");
+        System.out.println("["+ getFirstName() +"] Nouveau jeu. Score du set : " + gamesP1 + " - " + gamesP2 + ". " + server.getFirstName() + " au service.");
+        System.out.println("----------------------------------------------------");
+    }
+
+    public void announceNewSet(int setsP1, int setsP2) {
+        System.out.println("\n====================================================");
+        System.out.println("["+ getFirstName() +"] Nouveau Set. Score du match : " + setsP1 + " - " + setsP2);
+        System.out.println("====================================================");
     }
 
     public void annouceFault(){
@@ -47,8 +59,18 @@ public class Referee extends Person{
         System.out.println("Double fault !");
     }
 
-    public void annouceWinner( Player winner){
-        System.out.println(winner.getFirstName() + "  Win");
+    public void announceTieBreak() {
+        System.out.println("----------------------------------------------------");
+        System.out.println("["+ getFirstName() +"] Jeu décisif (Tie-break) !");
+        System.out.println("----------------------------------------------------");
+    }
+
+    public void announceSetWinner(Player winner) {
+        System.out.println("["+ getFirstName() +"] Set, " + winner.getFirstName() + ".");
+    }
+
+    public void announceMatchWinner(Player winner) {
+        System.out.println("["+ getFirstName() +"] Jeu, Set et Match, " + winner.getFirstName() + " !");
     }
 
     public void resolveDispute(/*Player p1, Player p2 */){
