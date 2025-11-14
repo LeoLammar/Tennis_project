@@ -13,13 +13,9 @@ import java.util.Random;
 public class TournamentService {
 
     private final MatchService matchService = new MatchService();
-    private List<Player> players; // Liste des joueurs participants au tournoi
-
-    
     public Tournament createTournament(String name, int year, List<Player> players, Referee[] referees) {
         // Créer un tournoi avec les joueurs et arbitres spécifiés
        Tournament tournament = new Tournament(name, "Ville", "Surface", "Catégorie", year, players.toArray(new Player[0]), referees, null);
-       this.players = players;
        return tournament;
     }
 

@@ -10,6 +10,7 @@ public class Player extends Person {
     private Coach coach;
     private String outfitColor;
     private boolean isFemale;
+    private PlayStyle playStyle;
 
     // Getter
 
@@ -37,6 +38,10 @@ public class Player extends Person {
         return isFemale;
     }
 
+    public PlayStyle getPlayStyle() {
+        return playStyle;
+    }
+
     // Setter
 
     public void setPlayingHand(String playingHand){
@@ -61,6 +66,10 @@ public class Player extends Person {
 
     public void setIsFemale(boolean isFemale){
         this.isFemale = isFemale;
+    }
+
+    public void setPlayStyle(PlayStyle playStyle) {
+        this.playStyle = playStyle;
     }
 
     // Methode
@@ -91,7 +100,7 @@ public class Player extends Person {
 
     // Constructor
 
-    public Player(String birthLastName, String currentLastName, String firstName, String nickname, String nationality, int height, int weight, String playingHand, String sponsor, int ranking, Coach coach, String outfitColor, boolean isFemale){
+    public Player(String birthLastName, String currentLastName, String firstName, String nickname, String nationality, int height, int weight, String playingHand, String sponsor, int ranking, Coach coach, String outfitColor, boolean isFemale, PlayStyle playStyle){
         super(birthLastName, currentLastName, firstName, nickname, nationality, height, weight);
         this.playingHand = playingHand;
         this.sponsor = sponsor;
@@ -99,12 +108,13 @@ public class Player extends Person {
         this.coach = coach;
         this.outfitColor = outfitColor;
         this.isFemale = isFemale;
+        this.playStyle = playStyle;
     }
 
     // Display
 
     @Override
     public String toString() {
-        return super.toString().replaceFirst("]$", ", playingHand=" + playingHand + ", sponsor=" + sponsor + ", ranking=" + ranking + ", coach=" + coach + ", outfitColor=" + outfitColor + ", isFemale=" + isFemale + "]");
+        return super.toString().replaceFirst("]$", ", playingHand=" + playingHand + ", sponsor=" + sponsor + ", ranking=" + ranking + ", coach=" + coach + ", outfitColor=" + outfitColor + ", isFemale=" + isFemale + ", playStyle=" + playStyle + "]");
     }
 }

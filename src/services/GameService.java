@@ -4,6 +4,7 @@ import model.BallExchange;
 import model.Game;
 import model.Player;
 import model.Statistics;
+import model.PlayStyle;
 import model.Referee;
 
 import java.util.ArrayList;
@@ -11,6 +12,11 @@ import java.util.List;
 import java.util.Random;
 
 public class GameService {
+
+    // 1. On déclare toutes les stratégies possibles
+    private final PlayerStrategy rankingStrategy = new RankingBasedStrategy();
+    private final PlayerStrategy aggressiveStrategy = new AggressivePlayerStrategy();
+    private final PlayerStrategy defensiveStrategy = new DefensivePlayerStrategy();
 
     private final Random random = new Random();
     
@@ -77,6 +83,30 @@ public class GameService {
         }
     }
 
+    /**
+     * Sélectionne la stratégie la plus appropriée en fonction du style des joueurs.
+     * @param p1 Joueur 1
+     * @param p2 Joueur 2
+     * @return La PlayerStrategy à utiliser.
+     */
+    private PlayerStrategy selectStrategy(Player p1, Player p2) {
+        PlayStyle styleP1 = p1.getPlayStyle();
+        PlayStyle styleP2 = p2.getPlayStyle();
+
+        // Cas 1: Le style défensif contrebalance le style agressif.
+        if ((styleP1 == PlayStyle.DEFENSIVE && styleP2 == PlayStyle.AGGRESSIVE) || (styleP2 == PlayStyle.DEFENSIVE && styleP1 == PlayStyle.AGGRESSIVE)) {
+            return defensiveStrategy;
+        }
+
+        // Cas 2: Un joueur agressif impose son rythme contre un joueur non-défensif.
+        if (styleP1 == PlayStyle.AGGRESSIVE || styleP2 == PlayStyle.AGGRESSIVE) {
+            return aggressiveStrategy;
+        }
+
+        // Cas 3 (par défaut): Pour les autres affrontements (All-around vs All-around, etc.), on se base sur le classement.
+        return rankingStrategy;
+    }
+
     public Player playTieBreak(Player player1, Player player2, Referee referee, Statistics matchStats) {
         int scoreP1 = 0;
         int scoreP2 = 0;
@@ -84,9 +114,12 @@ public class GameService {
 
         // Dans un tie-break, le service alterne différemment, mais pour simplifier,
         // nous allons garder une simulation de point simple.
+        // 3. On sélectionne la stratégie pour ce tie-break
+        PlayerStrategy strategy = selectStrategy(player1, player2);
+
         while (winner == null) {
             // On simule un point sans se soucier du serveur pour cette version simplifiée
-            Player pointWinner = playRally(player1, player2);
+            Player pointWinner = strategy.getPointWinner(player1, player2);
             if (pointWinner.equals(player1)) {
                 scoreP1++;
             } else {
@@ -115,6 +148,9 @@ public class GameService {
     private Player simulatePoint(Player server, Player receiver, Statistics stats, Referee referee) {
         stats.updateTotalPoints(); // Un point est joué quoi qu'il arrive.
 
+        // 3. On sélectionne la stratégie pour ce point précis
+        PlayerStrategy strategy = selectStrategy(server, receiver);
+
         // --- 1. Premier service ---
         boolean firstServeIn = random.nextInt(100) < 70; // 70% de chance que le 1er service soit bon
 
@@ -129,7 +165,7 @@ public class GameService {
                 return server; // Le serveur gagne le point
             }
             // Si pas d'ace, l'échange se joue normalement
-            return playRally(server, receiver);
+            return strategy.getPointWinner(server, receiver);
         }
 
         // --- 2. Second service (si le premier est faute) ---
@@ -141,7 +177,7 @@ public class GameService {
             stats.updateSecondServes();
             stats.updateAvgServeSpeed(random.nextInt(30) + 150); // Vitesse entre 150 et 179 km/h
             // L'échange se joue normalement
-            return playRally(server, receiver);
+            return strategy.getPointWinner(server, receiver);
         }
 
         // --- 3. Double faute ---
@@ -150,29 +186,4 @@ public class GameService {
         return receiver; // Le receveur gagne le point
     }
 
-
-    private Player playRally(Player p1, Player p2) {
-        // Nouvelle logique de probabilité plus équilibrée
-        final int BASE_CHANCE = 100; // Un poids de base pour chaque joueur
-        final double ADVANTAGE_FACTOR = 2.5; // Facteur d'avantage par point de classement d'écart
-
-        Player betterPlayer = p1.getRanking() < p2.getRanking() ? p1 : p2;
-        Player worsePlayer = p1.getRanking() < p2.getRanking() ? p2 : p1;
-
-        int rankDifference = worsePlayer.getRanking() - betterPlayer.getRanking();
-
-        // Le poids du meilleur joueur est augmenté en fonction de l'écart de classement
-        double betterPlayerWeight = BASE_CHANCE + (rankDifference * ADVANTAGE_FACTOR);
-        double totalWeight = betterPlayerWeight + BASE_CHANCE;
-
-        // On tire un nombre aléatoire dans la somme des poids
-        double randomValue = random.nextDouble() * totalWeight; // Un nombre entre 0.0 et totalWeight
-
-        // Si la valeur aléatoire tombe dans la "part" du meilleur joueur, il gagne.
-        if (randomValue < betterPlayerWeight) {
-            return betterPlayer;
-        } else {
-            return worsePlayer;
-        }
-    }
 }
