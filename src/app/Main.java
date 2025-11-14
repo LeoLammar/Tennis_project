@@ -30,6 +30,7 @@ public class Main extends Application {
     private List<Player> currentRoundPlayers;
     private List<Match> currentRoundMatches;
     private List<Player> nextRoundPlayers;
+    private List<List<Match>> allRoundsMatches; // Pour garder l'historique de l'arbre
     private int roundNumber;
     private boolean isTournamentOver;
     private List<String> grandSlamChronologicalOrder;
@@ -129,7 +130,7 @@ public class Main extends Application {
     private Tournament createTournament(String tournamentName) {
         List<Player> allPlayers = createPlayers();
         Collections.shuffle(allPlayers); // Mélange les joueurs pour un tirage au sort aléatoire
-        List<Player> tournamentPlayers = new ArrayList<>(allPlayers.subList(0, 4)); // On prend seulement 4 joueurs pour le test
+        List<Player> tournamentPlayers = new ArrayList<>(allPlayers.subList(0, 128));
 
         int year = 2025;
         Tournament tournament = new Tournament(tournamentName, "Ville", "Surface", "Catégorie", year, tournamentPlayers.toArray(new Player[0]), this.referees, null);
@@ -145,6 +146,7 @@ public class Main extends Application {
         this.currentRoundPlayers = new ArrayList<>(List.of(tournament.getPlayers()));
         this.isTournamentOver = false; // On réinitialise le drapeau au début de chaque tournoi
         this.nextRoundPlayers = new ArrayList<>();
+        this.allRoundsMatches = new ArrayList<>();
 
         TournamentService tournamentService = new TournamentService();
         this.currentRoundMatches = tournamentService.generateTournamentRound(this.currentRoundPlayers, tournament.getReferees());
@@ -152,6 +154,7 @@ public class Main extends Application {
         System.out.println("Début du tournoi : " + tournament.getName());
         tournamentButtonBox.getChildren().forEach(node -> node.setDisable(true));
         System.out.println("\n--- Tour " + roundNumber + " ---");
+        allRoundsMatches.add(new ArrayList<>(currentRoundMatches)); // On stocke les matchs du 1er tour
         System.out.println("Matchs à jouer :");
         for (Match match : currentRoundMatches) {
             System.out.println(match.getPlayer1().getFirstName() + " vs " + match.getPlayer2().getFirstName());
@@ -186,6 +189,7 @@ public class Main extends Application {
 
             TournamentService tournamentService = new TournamentService();
             currentRoundMatches = tournamentService.generateTournamentRound(currentRoundPlayers, currentTournament.getReferees());
+            allRoundsMatches.add(new ArrayList<>(currentRoundMatches)); // On stocke les matchs du nouveau tour
             
             System.out.println("\n--- Tour " + roundNumber + " ---");
             System.out.println("Matchs à jouer :");
@@ -215,6 +219,7 @@ public class Main extends Application {
                 String matchDescription = playedMatch.getPlayer1().getFirstName() + " vs " + playedMatch.getPlayer2().getFirstName();
                 System.out.println("Résultat du match " + matchDescription + " : Vainqueur = " + playedMatch.getWinner().getFirstName());
 
+                displayMatchStatistics(playedMatch); // On affiche les statistiques
                 nextMatchButton.setDisable(false); // On réactive le bouton après chaque match
                 
                 updateTournamentBracket(); // On met à jour l'affichage du tableau
@@ -245,6 +250,25 @@ public class Main extends Application {
         }
     }
 
+    private void displayMatchStatistics(Match match) {
+        Statistics stats = match.getStatistics();
+        if (stats != null) {
+            System.out.println("\n--- Statistiques du Match ---");
+            System.out.println("Joueurs : " + match.getPlayer1().getFirstName() + " vs " + match.getPlayer2().getFirstName());
+            System.out.println("Vainqueur : " + match.getWinner().getFirstName());
+            System.out.println("-----------------------------");
+            System.out.println("Aces : " + stats.getAces());
+            System.out.println("Doubles Fautes : " + stats.getDoublesFaults());
+            System.out.println("Pourcentage de 1er service : " + String.format("%.2f", (double)stats.getFirstServes() / stats.getTotalPoints() * 100) + "%");
+            System.out.println("Pourcentage de 2nd service : " + String.format("%.2f", (double)stats.getSecondServes() / stats.getTotalPoints() * 100) + "%");
+            System.out.println("Vitesse moyenne du service : " + String.format("%.2f", (double)stats.getAvgServeSpeed()) + " km/h");
+            System.out.println("Total des points joués : " + stats.getTotalPoints());
+            System.out.println("-----------------------------\n");
+        } else {
+            System.out.println("Aucune statistique disponible pour ce match.");
+        }
+    }
+
     private void displayTournamentWinner() {
         // Affiche le vainqueur du tournoi dans la zone de texte
         if (nextRoundPlayers.size() == 1 && currentTournament != null) {
@@ -257,25 +281,40 @@ public class Main extends Application {
 
     private void updateTournamentBracket() {
         tournamentBracketPane.getChildren().clear(); // On efface tout pour redessiner proprement
-        int currentColumn = roundNumber - 1; // La colonne correspond au tour actuel (0 pour le tour 1, etc.)
+    
+        for (int round = 0; round < allRoundsMatches.size(); round++) {
+            // Ajout du titre du tour
+            Label roundTitle = new Label("Tour " + (round + 1));
+            roundTitle.setStyle("-fx-font-weight: bold; -fx-underline: true;");
+            tournamentBracketPane.add(roundTitle, round, 0);
+    
+            List<Match> roundMatches = allRoundsMatches.get(round);
+            int rowIndex = 1;
+            for (Match match : roundMatches) {
+                Label player1Label = new Label(match.getPlayer1().getFirstName());
+                Label player2Label = new Label(match.getPlayer2().getFirstName());
+    
+                if (match.getWinner() != null) {
+                    if (match.getWinner().equals(match.getPlayer1())) {
+                        player1Label.setStyle("-fx-font-weight: bold; -fx-text-fill: green;");
+                        player2Label.setStyle("-fx-strikethrough: true;");
+                    } else {
+                        player2Label.setStyle("-fx-font-weight: bold; -fx-text-fill: green;");
+                        player1Label.setStyle("-fx-strikethrough: true;");
+                    }
+                }
+    
+                VBox matchBox = new VBox(5, player1Label, player2Label);
+                matchBox.setPadding(new Insets(5));
+                matchBox.setStyle("-fx-border-color: lightgray; -fx-border-width: 1;");
+                
+                // La position verticale dépend de la taille des tours précédents
+                // Pour simplifier, on augmente l'espacement à chaque tour
+                int verticalPosition = rowIndex * (int)Math.pow(2, round);
 
-        // Ajout du titre du tour
-        Label roundTitle = new Label("Tour " + roundNumber);
-        roundTitle.setStyle("-fx-font-weight: bold;");
-        tournamentBracketPane.add(roundTitle, currentColumn, 0);
-
-        // Affichage des matchs du tour en cours
-        int rowIndex = 1;
-        for (Match match : currentRoundMatches) {
-            String matchText = match.getPlayer1().getFirstName() + " vs " + match.getPlayer2().getFirstName();
-            tournamentBracketPane.add(new Label(matchText), currentColumn, rowIndex++);
-        }
-
-        // Affichage des vainqueurs déjà qualifiés pour ce tour
-        for (Player player : nextRoundPlayers) {
-            Label winnerLabel = new Label(player.getFirstName() + " (Qualifié)");
-            winnerLabel.setStyle("-fx-text-fill: green;");
-            tournamentBracketPane.add(winnerLabel, currentColumn, rowIndex++);
+                tournamentBracketPane.add(matchBox, round, verticalPosition);
+                rowIndex++;
+            }
         }
     }
 

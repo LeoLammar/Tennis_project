@@ -28,26 +28,21 @@ public class TournamentService {
         return new Match(player1, player2, referee, null, null, matchStats);
     }
 
-    public Match playMatch(Match match, int setsToWin) {
-        // Simuler la lecture d'un match
-        Referee referee = match.getReferee();
-        Statistics matchStatistics = match.getStatistics();
-        Player player1 = match.getPlayer1();
-        Player player2 = match.getPlayer2();
-
-        return matchService.playMatch(player1, player2, referee, matchStatistics, setsToWin);
+    public Match playMatch(Match match, int setsToWin) {        
+        // On appelle playMatch de MatchService, mais on met à jour l'objet Match original
+        return matchService.playMatch(match, setsToWin);
     }
 
     public List<Match> generateTournamentRound(List<Player> players, Referee[] referees) {
         // Générer un tour de matches
         List<Match> matches = new ArrayList<>();
-        Statistics matchStatistics = new Statistics();
         Random random = new Random();
 
         for (int i = 0; i < players.size(); i += 2) {
             Player player1 = players.get(i);
             Player player2 = players.get(i + 1);
             Referee referee = referees[random.nextInt(referees.length)]; // Sélectionner un arbitre au hasard
+            Statistics matchStatistics = new Statistics(); // Créer un nouvel objet de statistiques pour chaque match
 
             Match match = generateMatch(player1, player2, referee, matchStatistics, 2); // Par exemple, des matchs en 3 sets gagnants
             matches.add(match);

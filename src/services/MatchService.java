@@ -12,22 +12,16 @@ import model.Statistics;
 public class MatchService {
     private final SetService setService = new SetService();
 
-    /**
-     * Simule un match complet entre deux joueurs.
-     * @param player1 Le premier joueur.
-     * @param player2 Le deuxième joueur.
-     * @param referee L'arbitre du match.
-     * @param matchStats Les statistiques globales du match.
-     * @param setsToWin Le nombre de sets requis pour gagner le match (ex: 2 pour un "best-of-3", 3 pour un "best-of-5").
-     * @return L'objet Match avec le résultat final.
-     */
-    public Match playMatch(Player player1, Player player2, Referee referee, Statistics matchStats, int setsToWin) {
-        Match match = new Match(player1, player2, referee, null, null, matchStats);
+    public Match playMatch(Match match, int setsToWin) {
+        Player player1 = match.getPlayer1();
+        Player player2 = match.getPlayer2();
+        Referee referee = match.getReferee();
+        Statistics matchStats = match.getStatistics(); // On utilise les stats du match passé en paramètre
         List<Set> playedSets = new ArrayList<>();
 
         int setsWonP1 = 0;
         int setsWonP2 = 0;
-
+        
         while (match.getWinner() == null) {
             referee.announceNewSet(setsWonP1, setsWonP2);
             Set playedSet = setService.playSet(player1, player2, referee, matchStats);
