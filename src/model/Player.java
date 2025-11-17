@@ -7,8 +7,6 @@ public class Player extends Person {
     private String playingHand;
     private String sponsor;
     private int ranking;
-    private Coach coach;
-    private String outfitColor;
     private boolean isFemale;
     private PlayStyle playStyle;
 
@@ -24,14 +22,6 @@ public class Player extends Person {
 
     public int getRanking(){
         return ranking;
-    }
-
-    public Coach getCoach(){
-        return coach;
-    }
-
-    public String getOutfitColor(){
-        return outfitColor;
     }
 
     public boolean getIsFemale(){
@@ -56,14 +46,6 @@ public class Player extends Person {
         this.ranking = ranking;
     }
 
-    public void setCoach(Coach coach){
-        this.coach = coach;
-    }
-
-    public void setOutfitColor(String outfitColor){
-        this.outfitColor = outfitColor;
-    }
-
     public void setIsFemale(boolean isFemale){
         this.isFemale = isFemale;
     }
@@ -86,10 +68,6 @@ public class Player extends Person {
         System.out.println("Ah !");
     }
 
-    public void changeOutfitColor(String color){
-        setOutfitColor(color);
-    }
-
     public void celebrateVictory(){
         System.out.println("Victory !");
     }
@@ -100,13 +78,11 @@ public class Player extends Person {
 
     // Constructor
 
-    public Player(String birthLastName, String currentLastName, String firstName, String nickname, String nationality, int height, int weight, String playingHand, String sponsor, int ranking, Coach coach, String outfitColor, boolean isFemale, PlayStyle playStyle){
+    public Player(String birthLastName, String currentLastName, String firstName, String nickname, String nationality, int height, int weight, String playingHand, String sponsor, int ranking, boolean isFemale, PlayStyle playStyle){
         super(birthLastName, currentLastName, firstName, nickname, nationality, height, weight);
         this.playingHand = playingHand;
         this.sponsor = sponsor;
         this.ranking = ranking;
-        this.coach = coach;
-        this.outfitColor = outfitColor;
         this.isFemale = isFemale;
         this.playStyle = playStyle;
     }
@@ -115,6 +91,6 @@ public class Player extends Person {
 
     @Override
     public String toString() {
-        return super.toString().replaceFirst("]$", ", playingHand=" + playingHand + ", sponsor=" + sponsor + ", ranking=" + ranking + ", coach=" + coach + ", outfitColor=" + outfitColor + ", isFemale=" + isFemale + ", playStyle=" + playStyle + "]");
+        return super.toString().replaceFirst("]$", ", playingHand=" + playingHand + ", sponsor=" + sponsor + ", ranking=" + ranking + ", isFemale=" + isFemale + ", playStyle=" + playStyle + "]");
     }
 }

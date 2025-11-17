@@ -73,10 +73,6 @@ public class Referee extends Person{
         System.out.println("["+ getFirstName() +"] Jeu, Set et Match, " + winner.getFirstName() + " !");
     }
 
-    public void resolveDispute(/*Player p1, Player p2 */){
-        System.out.println("Dispute resolved");
-    }
-
     // Constructor
 
     public Referee(String birthLastName, String currentLastName, String firstName, String nickname, String nationality, int height, int weight, boolean micActive, int experience, boolean isChairUmpire){

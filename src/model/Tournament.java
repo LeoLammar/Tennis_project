@@ -8,7 +8,6 @@ public class Tournament {
     private int year;
     private Player players[];
     private Referee referees[];
-    private Spectator spectators[];
     private Match matches[];
 
     // Getter
@@ -39,10 +38,6 @@ public class Tournament {
 
     public Referee[] getReferees() {
         return referees;
-    }
-
-    public Spectator[] getSpectators() {
-        return spectators;
     }
 
     public Match[] getMatches() {
@@ -79,17 +74,13 @@ public class Tournament {
         this.referees = referees;
     }
 
-    public void setSpectators(Spectator[] spectators) {
-        this.spectators = spectators;
-    }
-
     public void setMatches(Match[] matches) {
         this.matches = matches;
     }
 
 
     // Constructor
-    public Tournament(String name, String city, String surface, String category, int year, Player[] players, Referee[] referees, Spectator[] spectators) {
+    public Tournament(String name, String city, String surface, String category, int year, Player[] players, Referee[] referees) {
         this.name = name;
         this.city = city;
         this.surface = surface;
@@ -97,14 +88,13 @@ public class Tournament {
         this.year = year;
         this.players = players;
         this.referees = referees;
-        this.spectators = spectators;
     }
 
     // Display  
 
     @Override
     public String toString() {
-        return "Tournament [name=" + name + ", city=" + city + ", surface=" + surface + ", year=" + year + ", players=" + players + ", referees=" + referees + ", spectators=" + spectators + ", matches=" + matches + "]";
+        return "Tournament [name=" + name + ", city=" + city + ", surface=" + surface + ", year=" + year + ", players=" + players + ", referees=" + referees + ", matches=" + matches + "]";
     }
 
 }

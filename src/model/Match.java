@@ -7,7 +7,7 @@ public class Match {
     private Set sets[];
     private Player winner;
     private Statistics statistics;
-    private boolean manualMode;
+    
 
     // Getter
 
@@ -33,10 +33,6 @@ public class Match {
 
     public Statistics getStatistics() {
         return statistics;
-    }
-
-    public boolean getManualMode() {
-        return manualMode;
     }
 
     // Setter
@@ -65,9 +61,6 @@ public class Match {
         this.statistics = statistics;
     }
 
-    public void setManualMode(boolean manualMode) {
-        this.manualMode = manualMode;
-    }
 
     // Constructor
 
@@ -78,6 +71,5 @@ public class Match {
         this.sets = sets;
         this.winner = winner;
         this.statistics = statistics;
-        this.manualMode = false;
     } 
 }

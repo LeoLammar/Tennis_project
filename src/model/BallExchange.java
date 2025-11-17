@@ -23,8 +23,6 @@ public class BallExchange {
 
     // Methode 
 
-   
-
     @Override   
     public String toString(){
         return "The winner is " + getWinner().getFirstName();
